@@ -27,13 +27,18 @@ public class MyApplication extends Application {
 	public static MyApplication getApp() {
 		return sApp;
 	}
-    
+
 	public void showMsg(final String msg){
+		showMsg(msg, 0);
+	}
+
+	public void showMsg(final String msg, final long time){
 		Runnable oRun = new Runnable(){
 
 			@Override
 			public void run() {
-				Toast.makeText(getApp(), msg, Toast.LENGTH_SHORT).show();
+				int n = time > 0 ? Toast.LENGTH_LONG:Toast.LENGTH_SHORT;
+				Toast.makeText(getApp(), msg, n).show();
 			}
 		};
 		if (mUiHandler == null){

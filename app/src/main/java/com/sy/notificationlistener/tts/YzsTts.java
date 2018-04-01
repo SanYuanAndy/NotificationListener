@@ -28,6 +28,7 @@ public class YzsTts implements ITts{
 	private boolean bInitSuccessed = false;
 	private final static String FRONTEND_MODEL_NAME = "frontend_model";
 	private final static String BACKEND_MODEL_NAME = "backend_female";
+	private IInitCallBack mInitCallback = null;
 
 	private boolean initResource(){
 		boolean ret = false;
@@ -55,17 +56,41 @@ public class YzsTts implements ITts{
 		return ret;
 	}
 
+	private void onInit(int code, String msg){
+		if (mInitCallback == null){
+			return;
+		}
+
+		IInitCallBack cb = mInitCallback;
+		mInitCallback = null;
+		bInitSuccessed = (code == 0);
+
+		if (!bInitSuccessed){
+			MyApplication.getApp().showMsg(msg, 1000);
+		}
+
+		if (cb != null) {
+			cb.onInit(code);
+		}
+	}
+
+	private void onInit(int code){
+		onInit(code, "");
+	}
+
 	/**
 	 * 初始化本地离线TTS
 	 */
 	@Override
-	public void initTts(){
+	public void initTts(IInitCallBack callBack){
 		boolean ret = false;
 		ret = initResource();
 		if (!ret){
 			Log.d(TAG, "initResource fail");
 			return;
 		}
+
+		mInitCallback = callBack;
 
 		// 初始化语音合成对象
 		mTTSPlayer = new SpeechSynthesizer(MyApplication.getApp(), null, null);
@@ -84,7 +109,7 @@ public class YzsTts implements ITts{
 					case SpeechConstants.TTS_EVENT_INIT:
 						// 初始化成功回调
 						log_i("onInitFinish");
-						bInitSuccessed = true;
+						onInit(0);
 						break;
 					case SpeechConstants.TTS_EVENT_SYNTHESIZER_START:
 						// 开始合成回调
@@ -136,7 +161,10 @@ public class YzsTts implements ITts{
 			@Override
 			public void onError(int type, String errorMSG) {
 				// 语音合成错误回调
-				log_i("onError");
+				log_i("onError:" + errorMSG);
+				if (!errorMSG.contains("没有")){
+					onInit(-1, errorMSG);
+				}
 				onEnd(-2);
 			}
 		});
@@ -155,6 +183,7 @@ public class YzsTts implements ITts{
 		}
 
 		mTtsCallBack = cb;
+		mTTSPlayer.setOption(SpeechConstants.TTS_KEY_VOICE_SPEED, 75);
 		mTTSPlayer.playText(sText);
 	}
 
@@ -176,6 +205,5 @@ public class YzsTts implements ITts{
 	private void log_i(String log) {
 		Log.i("demo", log);
 	}
-
 
 }

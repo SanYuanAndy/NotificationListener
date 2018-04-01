@@ -3,6 +3,8 @@ package com.sy.notificationlistener.tts;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.sy.notificationlistener.MyApplication;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,6 +21,8 @@ public class TtsManager {
         public String sText;
         public long addedTime;
     }
+
+    private boolean mInitSuccessed = false;
 
     private List<TtsTask> mTaskQueues = new LinkedList<TtsTask>();
     private TtsTask mCurrTask = null;
@@ -51,8 +55,28 @@ public class TtsManager {
             }
 
             if (mTts != null){
-                mTts.initTts();
+                mTts.initTts(new ITts.IInitCallBack() {
+                    @Override
+                    public void onInit(int retCode) {
+                        Log.d(TAG, "onInit:" + retCode);
+                        onTtsInit(retCode);
+                    }
+                });
             }
+        }
+    }
+
+    private synchronized void onTtsInit(int retCode){
+        if (retCode == 0){
+            mInitSuccessed = true;
+            MyApplication.getApp().runWorkerThread(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (TtsManager.this) {
+                        processTaskQueues();
+                    }
+                }
+            }, 0);
         }
     }
 
@@ -67,7 +91,7 @@ public class TtsManager {
     }
 
     public synchronized void stop(){
-        if (mCurrTask != null){
+        if (mCurrTask != null && mInitSuccessed){
             mTts.stop();
         }
         mTaskQueues.clear();
@@ -75,6 +99,10 @@ public class TtsManager {
     }
 
     private void processTaskQueues(){
+        if (!mInitSuccessed){
+            return;
+        }
+
         if (mCurrTask == null){
             if (!mTaskQueues.isEmpty()){
                 mCurrTask = mTaskQueues.get(0);

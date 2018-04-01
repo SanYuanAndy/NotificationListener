@@ -81,12 +81,22 @@ public class CheckPermissionActivity extends Activity {
                         Log.d("checkPermission", "fail : " + permissions[i]);
                         MyApplication.getApp().showMsg("获取权限失败");
                         this.finish();
+                        return;
                     }
                 }
+
+                goMainActivity();
                 break;
             }
             default:
                 break;
         }
+    }
+
+    public void goMainActivity(){
+        Intent intent = new Intent();
+        intent.setClass(this, MainActivity.class);
+        this.startActivity(intent);
+        this.finish();
     }
 }

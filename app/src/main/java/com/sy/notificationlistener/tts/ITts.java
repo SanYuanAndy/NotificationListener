@@ -9,7 +9,12 @@ public interface ITts {
         public void onEnd(int retCode);
     }
 
-    public void initTts();
+    public static interface IInitCallBack{
+        /*retCode为负数表示出错*/
+        public void onInit(int retCode);
+    }
+
+    public void initTts(IInitCallBack callBack);
 
     public void start(String sText, ITtsCallBack cb);
 

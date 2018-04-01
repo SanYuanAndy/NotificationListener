@@ -19,7 +19,6 @@ public class NotificationListener extends NotificationListenerService{
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         Log.d(TAG, "onNotifycationPosted");
-        //super.onNotificationPosted(sbn);
         String strPgkName = sbn.getPackageName();
         Log.d(TAG, strPgkName);
         boolean bTest = TextUtils.equals(MyApplication.getApp().getPackageName(), strPgkName);
@@ -36,20 +35,26 @@ public class NotificationListener extends NotificationListenerService{
             strMsg = strMsg + strPgkName + "\n";
             strMsg = strMsg + strExtraTitle + "\n";
             strMsg = strMsg + strExtraText;
-            if (bTest) {
+            //if (bTest)
+            {
                 MyApplication.getApp().showMsg("接收到\n" + strMsg);
             }
-            WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
+            final WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
             msg.mFriend = strExtraTitle;
             msg.mContent = strExtraText;
-            WeChatListener.notifyMsg(msg);
+            MyApplication.getApp().runWorkerThread(new Runnable() {
+                @Override
+                public void run() {
+                    WeChatListener.notifyMsg(msg);
+                }
+            }, 0);
+
         }
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         Log.d(TAG, "onNotifycationRemoved");
-        //super.onNotificationRemoved(sbn);
         String strPgkName = sbn.getPackageName();
         Log.d(TAG, strPgkName);
         boolean bTest = TextUtils.equals(MyApplication.getApp().getPackageName(), strPgkName);
@@ -69,10 +74,16 @@ public class NotificationListener extends NotificationListenerService{
             if (bTest) {
                 MyApplication.getApp().showMsg("清除:\n" + strMsg);
             }
-            WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
+            final WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
             msg.mFriend = strExtraTitle;
             msg.mContent = strExtraText;
-            WeChatListener.delMsg(msg);
+            MyApplication.getApp().runWorkerThread(new Runnable() {
+                @Override
+                public void run() {
+                    WeChatListener.delMsg(msg);
+                }
+            }, 0);
+
         }
     }
 }
