@@ -35,8 +35,7 @@ public class NotificationListener extends NotificationListenerService{
             strMsg = strMsg + strPgkName + "\n";
             strMsg = strMsg + strExtraTitle + "\n";
             strMsg = strMsg + strExtraText;
-            //if (bTest)
-            {
+            if (bTest){
                 MyApplication.getApp().showMsg("接收到\n" + strMsg);
             }
             final WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();

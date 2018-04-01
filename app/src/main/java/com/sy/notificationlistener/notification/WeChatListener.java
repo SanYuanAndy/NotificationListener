@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
@@ -52,6 +53,7 @@ public class WeChatListener {
         public boolean mNeedVibrate = false;
         public boolean mNeedTTS = false;
         public ConfigStatus mEditStatus = ConfigStatus.STATUS_NONE;//编辑状态，默认NONE
+        public long mLastNofitiedTime = 0;
     }
 
     public static class WeChatConfigs {
@@ -247,16 +249,29 @@ public class WeChatListener {
         }
 
         if (config != null) {
+            long now = SystemClock.elapsedRealtime();
             if (config.mNeedVibrate) {
-                Vibrate();
+                if (now > config.mLastNofitiedTime + 5000) {
+                    config.mLastNofitiedTime = now;
+                    Vibrate();
+                }
             }
 
             //有TTS播报就不需要提示音了
             do {
                 if (config.mNeedTTS) {
-                    String strNotify = ChineseCharUtils.getTtsReadedText(msg.mFriend, false) + ",来微信了.";
+                    ChineseCharUtils.Results result = new ChineseCharUtils.Results();
+                    boolean bReservedOtherAscii = false;
+                    String strReadableMsg = ChineseCharUtils.getTtsReadedText(msg.mFriend, bReservedOtherAscii, result);
+                    if (result.chineseCharCnt > 8 || result.readedAsciiCharCnt > 12 || strReadableMsg.length() > 16){
+                        strReadableMsg = strReadableMsg.substring(0, 8);
+                    }
+                    String strNotify = strReadableMsg + ",来微信了.";
                     Log.d(TAG, strNotify);
-                    playTTS(strNotify);
+                    if (now > config.mLastNofitiedTime + 10*1000) {
+                        config.mLastNofitiedTime = now;
+                        playTTS(strNotify);
+                    }
                     break;
                 }
 
