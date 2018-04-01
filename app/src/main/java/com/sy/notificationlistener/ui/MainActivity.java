@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -29,6 +31,33 @@ public class MainActivity extends AppCompatActivity {
     private Button mAddBtn = null;
     private ListView mConfigInfoListView = null;
     private ConfigInfoAdapter mConfigAdapter = null;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.setting_selector, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_auth:
+                authority();
+                break;
+            case R.id.menu_add:
+                addConfigItem();
+                mConfigAdapter.notifyDataSetChanged();
+                break;
+            case R.id.menu_test:
+                notifyMsg();
+                break;
+            case R.id.menu_help:
+                MyApplication.getApp().showMsg("需要进入授权设置界面，获取系统授权才能正常使用");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,30 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init(){
-        mAuthBtn = (Button)findViewById(R.id.auth_btn);
-        mAuthBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                authority();
-            }
-        });
-
-        mNotifyBtn = (Button)findViewById(R.id.notify_btn);
-        mNotifyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notifyMsg();
-            }
-        });
-
-        mAddBtn = (Button)findViewById(R.id.add_btn);
-        mAddBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addConfigItem();
-                mConfigAdapter.notifyDataSetChanged();
-            }
-        });
 
         mConfigInfoListView = (ListView)findViewById(R.id.config_info_lv);
 
@@ -192,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addConfigItem(){
         if(!WeChatListener.addItem()){
-            MyApplication.getApp().showMsg("上一个编辑项尚未完成");
+            MyApplication.getApp().showMsg("请,上一个编辑项尚未完成");
         }
     }
 }

@@ -4,23 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sy.notificationlistener.ui.MainActivity">
+    <!--
     <RelativeLayout
         android:id="@+id/setting_label"
         android:background="#ffffffff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
         <Button
             android:id="@+id/auth_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:text="@string/auth_btn_text"
             android:textColor="@drawable/btn_text_color_selector"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:background="#00ffffff"
          />
 
@@ -39,32 +38,20 @@
         <Button
             android:id="@+id/add_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:text="@string/add_btn_text"
             android:textColor="@drawable/btn_text_color_selector"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:background="#00ffffff"
         />
     </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/label_fenge"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#cc000000"
-        android:layout_below="@id/setting_label"
-        />
+    -->
     <ListView
         android:id="@+id/config_info_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#99ffffff"
-        android:layout_below="@id/label_fenge">
+        android:background="#99ffffff">
     </ListView>
 
 </RelativeLayout>

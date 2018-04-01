@@ -37,7 +37,7 @@ public class NotificationListener extends NotificationListenerService{
             strMsg = strMsg + strExtraTitle + "\n";
             strMsg = strMsg + strExtraText;
             if (bTest) {
-                MyApplication.getApp().showMsg(strMsg);
+                MyApplication.getApp().showMsg("接收到\n" + strMsg);
             }
             WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
             msg.mFriend = strExtraTitle;
@@ -50,5 +50,29 @@ public class NotificationListener extends NotificationListenerService{
     public void onNotificationRemoved(StatusBarNotification sbn) {
         Log.d(TAG, "onNotifycationRemoved");
         //super.onNotificationRemoved(sbn);
+        String strPgkName = sbn.getPackageName();
+        Log.d(TAG, strPgkName);
+        boolean bTest = TextUtils.equals(MyApplication.getApp().getPackageName(), strPgkName);
+        boolean bWeChat = WECHAT_PKG_NAME.equals(strPgkName);
+
+        if (bWeChat || bTest) {
+            Notification notification = sbn.getNotification();
+            Bundle extras = notification.extras;
+            String strExtraTitle = extras.getString(Notification.EXTRA_TITLE, "");
+            String strExtraText = extras.getString(Notification.EXTRA_TITLE, "");
+            Log.d(TAG, strExtraTitle);
+            Log.d(TAG, strExtraText);
+            String strMsg = "";
+            strMsg = strMsg + strPgkName + "\n";
+            strMsg = strMsg + strExtraTitle + "\n";
+            strMsg = strMsg + strExtraText;
+            if (bTest) {
+                MyApplication.getApp().showMsg("清除:\n" + strMsg);
+            }
+            WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
+            msg.mFriend = strExtraTitle;
+            msg.mContent = strExtraText;
+            WeChatListener.delMsg(msg);
+        }
     }
 }
