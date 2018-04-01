@@ -1,0 +1,10 @@
+<resources>
+    <string name="main_label_name">微信通知助手</string>
+    <string name="app_name">WeChatNotificationListener</string>
+    <string name="listener_name">WeChatNotificationListener</string>
+    <string name="auth_btn_text">授权设置</string>
+    <string name="notify_btn_text">发送测试通知</string>
+    <string name="add_btn_text">添加配置</string>
+    <string name="edit_btn_text">更多</string>
+    <string name="save_btn_text">保存</string>
+</resources>

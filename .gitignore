@@ -1,0 +1,13 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+#云知声TTS引擎商业产品,不能上传
+*libyzstts.so
+*usc.jar
+*backend_female
+*frontend_model
