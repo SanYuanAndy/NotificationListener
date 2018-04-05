@@ -1,7 +1,9 @@
 package com.sy.notificationlistener.service;
 
 import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
@@ -16,6 +18,13 @@ import com.sy.notificationlistener.notification.WeChatListener;
 public class NotificationListener extends NotificationListenerService{
     private final String TAG = "NotificationListener";
     private final String WECHAT_PKG_NAME = "com.tencent.mm";
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind");
+        return super.onBind(intent);
+    }
+
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         Log.d(TAG, "onNotifycationPosted");

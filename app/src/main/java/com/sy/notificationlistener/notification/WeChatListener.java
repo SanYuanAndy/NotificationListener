@@ -53,7 +53,8 @@ public class WeChatListener {
         public boolean mNeedVibrate = false;
         public boolean mNeedTTS = false;
         public ConfigStatus mEditStatus = ConfigStatus.STATUS_NONE;//编辑状态，默认NONE
-        public long mLastNofitiedTime = 0;
+        public long mLastTtsTime = 0;
+        public long mLastVibrateTime = 0;
     }
 
     public static class WeChatConfigs {
@@ -215,7 +216,7 @@ public class WeChatListener {
 
         File f = new File(MyApplication.getApp().getFilesDir() + File.separator + CONFIG_FILE_NAME);
         if (!f.exists()) {
-            return;
+            //return;
         }
 
         BufferedWriter writer = null;
@@ -251,8 +252,8 @@ public class WeChatListener {
         if (config != null) {
             long now = SystemClock.elapsedRealtime();
             if (config.mNeedVibrate) {
-                if (now > config.mLastNofitiedTime + 5000) {
-                    config.mLastNofitiedTime = now;
+                if (now > config.mLastVibrateTime + 5000) {
+                    config.mLastVibrateTime = now;
                     Vibrate();
                 }
             }
@@ -268,8 +269,8 @@ public class WeChatListener {
                     }
                     String strNotify = strReadableMsg + ",来微信了.";
                     Log.d(TAG, strNotify);
-                    if (now > config.mLastNofitiedTime + 10*1000) {
-                        config.mLastNofitiedTime = now;
+                    if (now > config.mLastTtsTime + 10*1000) {
+                        config.mLastTtsTime = now;
                         playTTS(strNotify);
                     }
                     break;
