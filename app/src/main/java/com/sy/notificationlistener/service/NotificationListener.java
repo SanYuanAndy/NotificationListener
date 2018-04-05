@@ -40,6 +40,12 @@ public class NotificationListener extends NotificationListenerService{
             String strExtraText = extras.getString(Notification.EXTRA_TITLE, "");
             Log.d(TAG, strExtraTitle);
             Log.d(TAG, strExtraText);
+            if (bTest && TextUtils.equals(AuthConfig.AUTH_TEST_TITLE, strExtraTitle)
+                    && TextUtils.equals(AuthConfig.AUTH_TEST_CONTENT, strExtraText)){
+                AuthConfig.setAuthedFlag(true);
+                return;
+            }
+
             String strMsg = "";
             strMsg = strMsg + strPgkName + "\n";
             strMsg = strMsg + strExtraTitle + "\n";
@@ -80,7 +86,7 @@ public class NotificationListener extends NotificationListenerService{
             strMsg = strMsg + strExtraTitle + "\n";
             strMsg = strMsg + strExtraText;
             if (bTest) {
-                MyApplication.getApp().showMsg("清除:\n" + strMsg);
+                //MyApplication.getApp().showMsg("清除:\n" + strMsg);
             }
             final WeChatListener.WeChatNotificationMsg msg = new WeChatListener.WeChatNotificationMsg();
             msg.mFriend = strExtraTitle;

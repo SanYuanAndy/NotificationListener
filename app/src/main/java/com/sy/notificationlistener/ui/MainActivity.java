@@ -21,6 +21,7 @@ import android.widget.PopupMenu;
 import com.sy.notificationlistener.MyApplication;
 import com.sy.notificationlistener.R;
 import com.sy.notificationlistener.notification.WeChatListener;
+import com.sy.notificationlistener.service.AuthConfig;
 
 import java.util.List;
 
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
         init();
+        testAuth();
     }
 
     private void init(){
@@ -193,6 +195,39 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         manager.notify(1, notification);
+    }
+
+    private void notifyAuthTestMsg(){
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentText(AuthConfig.AUTH_TEST_CONTENT)
+                .setContentTitle(AuthConfig.AUTH_TEST_TITLE)
+                .setSmallIcon(android.R.mipmap.sym_def_app_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setWhen(System.currentTimeMillis())
+                .build();
+
+        manager.notify(2, notification);
+    }
+
+    private void testAuth(){
+        if (AuthConfig.isAuthed()){
+            return;
+        }
+
+        notifyAuthTestMsg();
+        MyApplication.getApp().runWorkerThread(new Runnable() {
+            @Override
+            public void run() {
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(2);
+                if (!AuthConfig.isAuthed()){
+                    Log.d(TAG, "需要进入授权设置界面，获取系统授权才能正常使用");
+                    MyApplication.getApp().showMsg("需要进入授权设置界面，获取系统授权才能正常使用", 2000);
+                }
+            }
+        }, 1500);
     }
 
     private void addConfigItem(){

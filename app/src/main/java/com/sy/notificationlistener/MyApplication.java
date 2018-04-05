@@ -17,6 +17,7 @@ public class MyApplication extends Application {
     private Handler mUiHandler;
     private Handler mWorkHandler;
     private HandlerThread mWorkerThread;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
